@@ -24,6 +24,7 @@ func main() {
 		})
 	})
 
+	r.POST("/users", controllers.Register)
 	r.GET("/users", controllers.GetAll)
 
 	r.Run("localhost:1234")

@@ -16,6 +16,29 @@ type UserRegister struct {
 	Password    string `json:"password"`
 }
 
+func Register(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	var formData UserRegister
+
+	if err := c.ShouldBindJSON(&formData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	modelData := models.User{
+		Name:        formData.Name,
+		Email:       formData.Email,
+		PhoneNumber: formData.PhoneNumber,
+		Username:    formData.Username,
+		Password:    formData.Password,
+	}
+
+	db.Create(&modelData)
+
+	c.JSON(http.StatusOK, gin.H{"data": modelData})
+}
+
 func GetAll(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
