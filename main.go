@@ -42,5 +42,5 @@ func main() {
 	r.DELETE("/users/:id", controllers.DeleteData)
 
 	// host := "localhost"
-	r.Run("localhost:" + os.Getenv("port"))
+	r.Run("localhost:" + os.Getenv("PORT"))
 }
