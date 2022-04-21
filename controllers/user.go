@@ -9,11 +9,11 @@ import (
 )
 
 type UserRegister struct {
-	Name        string `json:"name"`
-	Email       string `json:"email"`
+	Name        string `json:"name" binding:"required"`
+	Email       string `json:"email" binding:"required"`
 	PhoneNumber string `json:"phoneNumber"`
-	Username    string `json:"username"`
-	Password    string `json:"password"`
+	Username    string `json:"username" binding:"required"`
+	Password    string `json:"password" binding:"required"`
 }
 
 func GetAllData(c *gin.Context) {
@@ -27,11 +27,22 @@ func GetAllData(c *gin.Context) {
 
 func CreateData(c *gin.Context) {
 	var formData UserRegister
+	var userData models.User
 
 	db := c.MustGet("db").(*gorm.DB)
 
 	if err := c.ShouldBindJSON(&formData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := db.Where("email = ?", formData.Email).First(&userData).Error; err == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email already registered"})
+		return
+	}
+
+	if err := db.Where("username = ?", formData.Username).First(&userData).Error; err == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Username already registered"})
 		return
 	}
 
