@@ -1,0 +1,5 @@
+MEMBUAT PROYEK BARU
+go mod init golang.api
+
+MENAMBAH PAKET
+go get github.com/gin-gonic/gin github.com/jinzhu/gorm
