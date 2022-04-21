@@ -24,9 +24,10 @@ func main() {
 		})
 	})
 
-	r.GET("/users", controllers.GetAll)
-	r.POST("/users", controllers.Register)
-	r.PUT("/users/:id", controllers.Update)
+	r.GET("/users", controllers.GetAllData)
+	r.POST("/users", controllers.CreateData)
+	r.PUT("/users/:id", controllers.UpdateData)
+	r.DELETE("/users/:id", controllers.DeleteData)
 
 	r.Run("localhost:1234")
 }

@@ -16,7 +16,16 @@ type UserRegister struct {
 	Password    string `json:"password"`
 }
 
-func Register(c *gin.Context) {
+func GetAllData(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	var users []models.User
+	db.Find(&users)
+
+	c.JSON(http.StatusOK, gin.H{"data": users})
+}
+
+func CreateData(c *gin.Context) {
 	var formData UserRegister
 
 	db := c.MustGet("db").(*gorm.DB)
@@ -39,7 +48,7 @@ func Register(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": modelData})
 }
 
-func Update(c *gin.Context) {
+func UpdateData(c *gin.Context) {
 	var modelData models.User
 	var formData UserRegister
 
@@ -60,11 +69,17 @@ func Update(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": modelData})
 }
 
-func GetAll(c *gin.Context) {
+func DeleteData(c *gin.Context) {
+	var modelData models.User
+
 	db := c.MustGet("db").(*gorm.DB)
 
-	var users []models.User
-	db.Find(&users)
+	if err := db.Where("id = ?", c.Param("id")).First(&modelData).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{"data": users})
+	db.Delete(&modelData)
+
+	c.JSON(http.StatusOK, gin.H{"data": modelData})
 }
