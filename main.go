@@ -2,13 +2,25 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"golang.api/controllers"
 	"golang.api/models"
 )
 
+func LoadEnvy() {
+	err := godotenv.Load()
+
+	if err != nil {
+		panic("Error loading .env file")
+	}
+}
+
 func main() {
+	LoadEnvy()
+
 	r := gin.Default()
 
 	db := models.SetupModels()
@@ -29,5 +41,6 @@ func main() {
 	r.PUT("/users/:id", controllers.UpdateData)
 	r.DELETE("/users/:id", controllers.DeleteData)
 
-	r.Run("localhost:1234")
+	// host := "localhost"
+	r.Run("localhost:" + os.Getenv("port"))
 }
