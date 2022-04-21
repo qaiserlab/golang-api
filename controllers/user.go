@@ -17,9 +17,9 @@ type UserRegister struct {
 }
 
 func Register(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-
 	var formData UserRegister
+
+	db := c.MustGet("db").(*gorm.DB)
 
 	if err := c.ShouldBindJSON(&formData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -35,6 +35,27 @@ func Register(c *gin.Context) {
 	}
 
 	db.Create(&modelData)
+
+	c.JSON(http.StatusOK, gin.H{"data": modelData})
+}
+
+func Update(c *gin.Context) {
+	var modelData models.User
+	var formData UserRegister
+
+	db := c.MustGet("db").(*gorm.DB)
+
+	if err := db.Where("id = ?", c.Param("id")).First(&modelData).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := c.ShouldBindJSON(&formData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	db.Model(&modelData).Update(formData)
 
 	c.JSON(http.StatusOK, gin.H{"data": modelData})
 }
