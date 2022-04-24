@@ -31,8 +31,8 @@ func main() {
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"data":    "GOLANG API",
-			"version": "1.0.0",
+			"APP_NAME":    os.Getenv("APP_NAME"),
+			"APP_VERSION": os.Getenv("APP_VERSION"),
 		})
 	})
 
