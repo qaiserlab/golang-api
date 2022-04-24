@@ -2,7 +2,7 @@ package models
 
 type User struct {
 	ID          int `gorm:"primaryKey;autoIncrement"`
-	RoleID      int `json:"roleId"`
+	RoleID      int
 	Role        Role
 	Name        string `json:"name"`
 	Gender      int    `json:"gender"`
