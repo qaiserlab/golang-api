@@ -17,19 +17,19 @@ type UserRegister struct {
 }
 
 func GetAllData(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-
 	var users []models.User
-	db.Find(&users)
+
+	db := c.MustGet("db").(*gorm.DB)
+	db.Preload("Role").Find(&users)
 
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }
 
 func GetOneData(c *gin.Context) {
-	db := c.MustGet("db").(*gorm.DB)
-
 	var user models.User
-	db.Find(&user, c.Param("id"))
+
+	db := c.MustGet("db").(*gorm.DB)
+	db.Preload("Role").Find(&user, c.Param("id"))
 
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
