@@ -25,6 +25,15 @@ func GetAllData(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }
 
+func GetOneData(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	var user models.User
+	db.Find(&user, c.Param("id"))
+
+	c.JSON(http.StatusOK, gin.H{"data": user})
+}
+
 func CreateData(c *gin.Context) {
 	var formData UserRegister
 	var userData models.User

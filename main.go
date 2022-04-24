@@ -37,6 +37,7 @@ func main() {
 	})
 
 	r.GET("/users", controllers.GetAllData)
+	r.GET("/users/:id", controllers.GetOneData)
 	r.POST("/users", controllers.CreateData)
 	r.PUT("/users/:id", controllers.UpdateData)
 	r.DELETE("/users/:id", controllers.DeleteData)
