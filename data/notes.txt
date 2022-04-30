@@ -3,3 +3,12 @@ go mod init golang.api
 
 MENAMBAH PAKET
 go get github.com/gin-gonic/gin github.com/jinzhu/gorm
+
+MENJALANKAN PROYEK
+./air
+
+PUBLISH GOPATH
+
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+https://stackoverflow.com/questions/21001387/how-do-i-set-the-gopath-environment-variable-on-ubuntu-what-file-must-i-edit
