@@ -38,31 +38,32 @@ func main() {
 		c.Next()
 	})
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"APP_NAME":    os.Getenv("APP_NAME"),
-			"APP_VERSION": os.Getenv("APP_VERSION"),
-		})
-	})
-
 	v1 := r.Group("/api/v1")
 	{
 		users := v1.Group("/users")
 		{
-			users.GET("/", controllers.GetAllData)
-			users.GET("/:id", controllers.GetOneData)
-			users.POST("/", controllers.CreateData)
-			users.PUT("/:id", controllers.UpdateData)
-			users.DELETE("/:id", controllers.DeleteData)
+			users.GET("/", controllers.GetUsers)
+			users.GET("/:id", controllers.GetUserById)
+			users.POST("/", controllers.CreateUser)
+			users.PUT("/:id", controllers.UpdateUserById)
+			users.DELETE("/:id", controllers.DeleteUserById)
 		}
 	}
 
 	docs.SwaggerInfo.Title = "Golang API"
 	docs.SwaggerInfo.Description = "This is a Golang API server."
 	docs.SwaggerInfo.Version = "1.0.0"
-	docs.SwaggerInfo.Host = "localhost:1234/swagger/index.html"
+	docs.SwaggerInfo.Host = "localhost:" + os.Getenv("PORT")
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"APP_NAME":    os.Getenv("APP_NAME"),
+			"APP_VERSION": os.Getenv("APP_VERSION"),
+			"APP_SWAG":    "http://localhost:" + os.Getenv("PORT") + "/swagger/index.html",
+		})
+	})
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

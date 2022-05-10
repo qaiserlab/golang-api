@@ -1,3 +1,10 @@
+ANNOTATIONS
+
+// @Param        	q    query     string  false  "name search by q"  Format(email)
+// @Failure      	400  {object}  httputil.HTTPError
+// @Failure      	404  {object}  httputil.HTTPError
+// @Failure      	500  {object}  httputil.HTTPError
+
 MEMBUAT PROYEK BARU
 go mod init golang.api
 

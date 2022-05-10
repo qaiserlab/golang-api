@@ -8,7 +8,7 @@ import (
 	"golang.api/models"
 )
 
-type UserRegister struct {
+type FormUser struct {
 	Name        string `json:"name" binding:"required"`
 	Email       string `json:"email" binding:"required"`
 	PhoneNumber string `json:"phoneNumber"`
@@ -16,7 +16,15 @@ type UserRegister struct {
 	Password    string `json:"password" binding:"required"`
 }
 
-func GetAllData(c *gin.Context) {
+// GetUsers godoc
+// @Summary				List users
+// @Description		Get list of users
+// @Tags         	users
+// @Accept       	json
+// @Produce      	json
+// @Success      	200 {array} models.User
+// @Router       	/users [get]
+func GetUsers(c *gin.Context) {
 	var users []models.User
 
 	db := c.MustGet("db").(*gorm.DB)
@@ -25,7 +33,16 @@ func GetAllData(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }
 
-func GetOneData(c *gin.Context) {
+// GetUserById		godoc
+// @Summary     	Get user
+// @Description  	Get one user data by ID
+// @Tags         	users
+// @Accept       	json
+// @Produce      	json
+// @Param       	id path int true "User ID"
+// @Success     	200 {object} models.User
+// @Router      	/users/{id} [get]
+func GetUserById(c *gin.Context) {
 	var user models.User
 
 	db := c.MustGet("db").(*gorm.DB)
@@ -34,9 +51,9 @@ func GetOneData(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
-func CreateData(c *gin.Context) {
-	var formData UserRegister
-	var userData models.User
+func CreateUser(c *gin.Context) {
+	var formData FormUser
+	var user models.User
 
 	db := c.MustGet("db").(*gorm.DB)
 
@@ -45,17 +62,17 @@ func CreateData(c *gin.Context) {
 		return
 	}
 
-	if err := db.Where("email = ?", formData.Email).First(&userData).Error; err == nil {
+	if err := db.Where("email = ?", formData.Email).First(&user).Error; err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Email already registered"})
 		return
 	}
 
-	if err := db.Where("username = ?", formData.Username).First(&userData).Error; err == nil {
+	if err := db.Where("username = ?", formData.Username).First(&user).Error; err == nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Username already registered"})
 		return
 	}
 
-	modelData := models.User{
+	newUser := models.User{
 		Name:        formData.Name,
 		Email:       formData.Email,
 		PhoneNumber: formData.PhoneNumber,
@@ -63,18 +80,18 @@ func CreateData(c *gin.Context) {
 		Password:    formData.Password,
 	}
 
-	db.Create(&modelData)
+	db.Create(&newUser)
 
-	c.JSON(http.StatusOK, gin.H{"data": modelData})
+	c.JSON(http.StatusOK, gin.H{"data": newUser})
 }
 
-func UpdateData(c *gin.Context) {
-	var modelData models.User
-	var formData UserRegister
+func UpdateUserById(c *gin.Context) {
+	var formData FormUser
+	var user models.User
 
 	db := c.MustGet("db").(*gorm.DB)
 
-	if err := db.Where("id = ?", c.Param("id")).First(&modelData).Error; err != nil {
+	if err := db.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -84,22 +101,22 @@ func UpdateData(c *gin.Context) {
 		return
 	}
 
-	db.Model(&modelData).Update(formData)
+	db.Model(&user).Update(formData)
 
-	c.JSON(http.StatusOK, gin.H{"data": modelData})
+	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
-func DeleteData(c *gin.Context) {
-	var modelData models.User
+func DeleteUserById(c *gin.Context) {
+	var user models.User
 
 	db := c.MustGet("db").(*gorm.DB)
 
-	if err := db.Where("id = ?", c.Param("id")).First(&modelData).Error; err != nil {
+	if err := db.Where("id = ?", c.Param("id")).First(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	db.Delete(&modelData)
+	db.Delete(&user)
 
-	c.JSON(http.StatusOK, gin.H{"data": modelData})
+	c.JSON(http.StatusOK, gin.H{"data": user})
 }
