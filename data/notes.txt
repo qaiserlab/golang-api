@@ -5,6 +5,9 @@ ANNOTATIONS
 // @Failure      	404  {object}  httputil.HTTPError
 // @Failure      	500  {object}  httputil.HTTPError
 
+GENERATE API DOCS
+swag init
+
 MEMBUAT PROYEK BARU
 go mod init golang.api
 

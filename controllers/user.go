@@ -16,10 +16,10 @@ type FormUser struct {
 	Password    string `json:"password" binding:"required"`
 }
 
-// GetUsers godoc
-// @Summary				List users
+// GetUsers 			godoc
+// @Summary				List user
 // @Description		Get list of users
-// @Tags         	users
+// @Tags         	user
 // @Accept       	json
 // @Produce      	json
 // @Success      	200 {array} models.User
@@ -36,7 +36,7 @@ func GetUsers(c *gin.Context) {
 // GetUserById		godoc
 // @Summary     	Get user
 // @Description  	Get one user data by ID
-// @Tags         	users
+// @Tags         	user
 // @Accept       	json
 // @Produce      	json
 // @Param       	id path int true "User ID"
@@ -51,6 +51,15 @@ func GetUserById(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
 
+// CreateUser			godoc
+// @Summary     	Create user
+// @Description  	Create new user
+// @Tags         	user
+// @Accept       	json
+// @Produce      	json
+// @Param       	user body FormUser true "Form Data"
+// @Success     	201 {object} models.User
+// @Router      	/users [post]
 func CreateUser(c *gin.Context) {
 	var formData FormUser
 	var user models.User
@@ -82,9 +91,19 @@ func CreateUser(c *gin.Context) {
 
 	db.Create(&newUser)
 
-	c.JSON(http.StatusOK, gin.H{"data": newUser})
+	c.JSON(http.StatusCreated, gin.H{"data": newUser})
 }
 
+// UpdateUserById	godoc
+// @Summary     	Update user
+// @Description  	Update user data by ID
+// @Tags         	user
+// @Accept       	json
+// @Produce      	json
+// @Param       	id path int true "User ID"
+// @Param       	user body FormUser true "Form Data"
+// @Success     	200 {object} models.User
+// @Router      	/users/{id} [put]
 func UpdateUserById(c *gin.Context) {
 	var formData FormUser
 	var user models.User
