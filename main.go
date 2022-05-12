@@ -8,7 +8,7 @@ import (
 	"github.com/joho/godotenv"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
-	"golang.api/controllers"
+	c "golang.api/controllers"
 	"golang.api/docs"
 	"golang.api/models"
 )
@@ -21,13 +21,12 @@ func LoadEnvy() {
 	}
 }
 
-// @contact.name   API Support
-// @contact.url    http://www.swagger.io/support
-// @contact.email  support@swagger.io
-
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+// @contact.name   Fadlun Anaturdasa
+// @contact.url    https://qaiserlab.github.io
+// @contact.email  f.anaturdasa@gmail.com
 func main() {
+	const BasePath = "/api/v1"
+
 	LoadEnvy()
 
 	r := gin.Default()
@@ -38,30 +37,30 @@ func main() {
 		c.Next()
 	})
 
-	v1 := r.Group("/api/v1")
+	v1 := r.Group(BasePath)
 	{
 		users := v1.Group("/users")
 		{
-			users.GET("/", controllers.GetUsers)
-			users.GET("/:id", controllers.GetUserById)
-			users.POST("/", controllers.CreateUser)
-			users.PUT("/:id", controllers.UpdateUserById)
-			users.DELETE("/:id", controllers.DeleteUserById)
+			users.GET("/", c.GetUsers)
+			users.GET("/:id", c.GetUserById)
+			users.POST("/", c.CreateUser)
+			users.PUT("/:id", c.UpdateUserById)
+			users.DELETE("/:id", c.DeleteUserById)
 		}
 	}
 
-	docs.SwaggerInfo.Title = "Golang API"
-	docs.SwaggerInfo.Description = "This is a Golang API server."
-	docs.SwaggerInfo.Version = "1.0.0"
+	docs.SwaggerInfo.Title = os.Getenv("APP_NAME")
+	docs.SwaggerInfo.Description = os.Getenv("APP_DESCRIPTION")
+	docs.SwaggerInfo.Version = os.Getenv("APP_VERSION")
 	docs.SwaggerInfo.Host = "localhost:" + os.Getenv("PORT")
-	docs.SwaggerInfo.BasePath = "/api/v1"
+	docs.SwaggerInfo.BasePath = BasePath
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"APP_NAME":    os.Getenv("APP_NAME"),
 			"APP_VERSION": os.Getenv("APP_VERSION"),
-			"APP_SWAG":    "http://localhost:" + os.Getenv("PORT") + "/swagger/index.html",
+			"APP_SWAG":    "http://" + os.Getenv("HOST") + ":" + os.Getenv("PORT") + "/swagger/index.html",
 		})
 	})
 

@@ -49,12 +49,9 @@ definitions:
     type: object
 info:
   contact:
-    email: support@swagger.io
-    name: API Support
-    url: http://www.swagger.io/support
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+    email: f.anaturdasa@gmail.com
+    name: Fadlun Anaturdasa
+    url: https://qaiserlab.github.io
 paths:
   /users:
     get:

@@ -11,13 +11,9 @@ const docTemplate = `{
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
         "contact": {
-            "name": "API Support",
-            "url": "http://www.swagger.io/support",
-            "email": "support@swagger.io"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+            "name": "Fadlun Anaturdasa",
+            "url": "https://qaiserlab.github.io",
+            "email": "f.anaturdasa@gmail.com"
         },
         "version": "{{.Version}}"
     },
