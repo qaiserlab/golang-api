@@ -91,15 +91,15 @@ func CreateRecord(c *gin.Context) {
 }
 
 // UpdateRecordById	godoc
-// @Summary     		Update user
-// @Description  		Update user data by ID
-// @Tags         		user
-// @Accept       		json
-// @Produce      		json
-// @Param       		id path int true "User ID"
-// @Param       		user body FormUser true "Form Data"
-// @Success     		200 {object} models.User
-// @Router      		/users/{id} [put]
+// @Summary					Update user
+// @Description			Update user data by ID
+// @Tags						user
+// @Accept					json
+// @Produce					json
+// @Param						id path int true "User ID"
+// @Param						user body FormUser true "Form Data"
+// @Success					200 {object} models.User
+// @Router					/users/{id} [put]
 func UpdateRecordById(c *gin.Context) {
 	var formData FormUser
 	var user models.User
@@ -122,14 +122,14 @@ func UpdateRecordById(c *gin.Context) {
 }
 
 // DeleteRecordById	godoc
-// @Summary     		Delete user
-// @Description  		Delete user data by ID
-// @Tags         		user
-// @Accept       		json
-// @Produce      		json
-// @Param       		id path int true "User ID"
-// @Success     		200 {object} models.User
-// @Router      		/users/{id} [delete]
+// @Summary					Delete user
+// @Description			Delete user data by ID
+// @Tags						user
+// @Accept					json
+// @Produce					json
+// @Param						id path int true "User ID"
+// @Success					200 {object} models.User
+// @Router					/users/{id} [delete]
 func DeleteRecordById(c *gin.Context) {
 	var user models.User
 
