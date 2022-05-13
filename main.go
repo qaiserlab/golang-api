@@ -8,10 +8,9 @@ import (
 	"github.com/joho/godotenv"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
-	"golang.api/controllers/auth"
-	"golang.api/controllers/user"
 	"golang.api/docs"
 	"golang.api/models"
+	"golang.api/routes"
 )
 
 func LoadEnvy() {
@@ -26,8 +25,6 @@ func LoadEnvy() {
 // @contact.url    https://qaiserlab.github.io
 // @contact.email  f.anaturdasa@gmail.com
 func main() {
-	const BasePath = "/api/v1"
-
 	LoadEnvy()
 
 	r := gin.Default()
@@ -38,28 +35,15 @@ func main() {
 		c.Next()
 	})
 
-	v1 := r.Group(BasePath)
-	{
-		authRouter := v1.Group("/auth")
-		{
-			authRouter.POST("/login", auth.Login)
-		}
-
-		userRouter := v1.Group("/users")
-		{
-			userRouter.GET("/", user.GetRecords)
-			userRouter.GET("/:id", user.GetRecordById)
-			userRouter.POST("/", user.CreateRecord)
-			userRouter.PUT("/:id", user.UpdateRecordById)
-			userRouter.DELETE("/:id", user.DeleteRecordById)
-		}
-	}
+	v1BasePath := routes.GetV1BasePath()
+	v1 := r.Group(v1BasePath)
+	routes.LoadV1Router(v1)
 
 	docs.SwaggerInfo.Title = os.Getenv("APP_NAME")
 	docs.SwaggerInfo.Description = os.Getenv("APP_DESCRIPTION")
 	docs.SwaggerInfo.Version = os.Getenv("APP_VERSION")
-	docs.SwaggerInfo.Host = "localhost:" + os.Getenv("PORT")
-	docs.SwaggerInfo.BasePath = BasePath
+	docs.SwaggerInfo.Host = "http://" + os.Getenv("HOST") + ":" + os.Getenv("PORT")
+	docs.SwaggerInfo.BasePath = v1BasePath
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	r.GET("/", func(c *gin.Context) {
