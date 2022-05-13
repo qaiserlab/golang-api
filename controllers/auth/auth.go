@@ -8,15 +8,15 @@ import (
 	"golang.api/models"
 )
 
-// Login					godoc
-// @Summary				Login
-// @Description		Login as user
-// @Tags					auth
-// @Accept				json
-// @Produce				json
-// @Param					user body FormLogin true "Form Data"
-// @Success				200 {object} models.User
-// @Router				/auth/login [post]
+// Login         	godoc
+// @Summary      	Login
+// @Description  	Login as user
+// @Tags         	auth
+// @Accept       	json
+// @Produce      	json
+// @Param        	user body FormLogin true "Form Data"
+// @Success      	200 {object} models.User
+// @Router       	/v1/auth/login [post]
 func Login(c *gin.Context) {
 	var formData FormLogin
 	var user models.User

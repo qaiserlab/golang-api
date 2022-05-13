@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 
@@ -35,22 +36,25 @@ func main() {
 		c.Next()
 	})
 
-	v1BasePath := routes.GetV1BasePath()
-	v1 := r.Group(v1BasePath)
-	routes.LoadV1Router(v1)
+	routes.LoadV1Router(r)
+
+	basePath := os.Getenv("HOST") + ":" + os.Getenv("PORT")
+	baseUrl := "http://" + basePath
+
+	fmt.Println(baseUrl)
 
 	docs.SwaggerInfo.Title = os.Getenv("APP_NAME")
 	docs.SwaggerInfo.Description = os.Getenv("APP_DESCRIPTION")
 	docs.SwaggerInfo.Version = os.Getenv("APP_VERSION")
-	docs.SwaggerInfo.Host = "http://" + os.Getenv("HOST") + ":" + os.Getenv("PORT")
-	docs.SwaggerInfo.BasePath = v1BasePath
+	docs.SwaggerInfo.Host = basePath
+	docs.SwaggerInfo.BasePath = "/"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"APP_NAME":    os.Getenv("APP_NAME"),
 			"APP_VERSION": os.Getenv("APP_VERSION"),
-			"APP_SWAG":    "http://" + os.Getenv("HOST") + ":" + os.Getenv("PORT") + "/swagger/index.html",
+			"APP_SWAG":    baseUrl + "/swagger/index.html",
 		})
 	})
 

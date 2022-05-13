@@ -15,7 +15,7 @@ import (
 // @Accept       	json
 // @Produce      	json
 // @Success      	200 {array} models.User
-// @Router       	/users [get]
+// @Router       	/v1/users [get]
 func GetRecords(c *gin.Context) {
 	var users []models.User
 
@@ -33,7 +33,7 @@ func GetRecords(c *gin.Context) {
 // @Produce      	json
 // @Param       	id path int true "User ID"
 // @Success     	200 {object} models.User
-// @Router      	/users/{id} [get]
+// @Router      	/v1/users/{id} [get]
 func GetRecordById(c *gin.Context) {
 	var user models.User
 
@@ -55,7 +55,7 @@ func GetRecordById(c *gin.Context) {
 // @Produce      	json
 // @Param       	user body FormUser true "Form Data"
 // @Success     	201 {object} models.User
-// @Router      	/users [post]
+// @Router      	/v1/users [post]
 func CreateRecord(c *gin.Context) {
 	var formData FormUser
 	var user models.User
@@ -99,7 +99,7 @@ func CreateRecord(c *gin.Context) {
 // @Param						id path int true "User ID"
 // @Param						user body FormUser true "Form Data"
 // @Success					200 {object} models.User
-// @Router					/users/{id} [put]
+// @Router					/v1/users/{id} [put]
 func UpdateRecordById(c *gin.Context) {
 	var formData FormUser
 	var user models.User
@@ -129,7 +129,7 @@ func UpdateRecordById(c *gin.Context) {
 // @Produce					json
 // @Param						id path int true "User ID"
 // @Success					200 {object} models.User
-// @Router					/users/{id} [delete]
+// @Router					/v1/users/{id} [delete]
 func DeleteRecordById(c *gin.Context) {
 	var user models.User
 

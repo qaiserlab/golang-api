@@ -8,7 +8,7 @@
         }
     },
     "paths": {
-        "/auth/login": {
+        "/v1/auth/login": {
             "post": {
                 "description": "Login as user",
                 "consumes": [
@@ -42,7 +42,7 @@
                 }
             }
         },
-        "/users": {
+        "/v1/users": {
             "get": {
                 "description": "Get list of users",
                 "consumes": [
@@ -100,7 +100,7 @@
                 }
             }
         },
-        "/users/{id}": {
+        "/v1/users/{id}": {
             "get": {
                 "description": "Get one user data by ID",
                 "consumes": [

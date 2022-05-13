@@ -63,7 +63,7 @@ info:
     name: Fadlun Anaturdasa
     url: https://qaiserlab.github.io
 paths:
-  /auth/login:
+  /v1/auth/login:
     post:
       consumes:
       - application/json
@@ -85,7 +85,7 @@ paths:
       summary: Login
       tags:
       - auth
-  /users:
+  /v1/users:
     get:
       consumes:
       - application/json
@@ -123,7 +123,7 @@ paths:
       summary: Create user
       tags:
       - user
-  /users/{id}:
+  /v1/users/{id}:
     delete:
       consumes:
       - application/json
