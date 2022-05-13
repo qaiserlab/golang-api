@@ -8,7 +8,8 @@ import (
 	"github.com/joho/godotenv"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
-	c "golang.api/controllers"
+	"golang.api/controllers/auth"
+	"golang.api/controllers/user"
 	"golang.api/docs"
 	"golang.api/models"
 )
@@ -39,13 +40,18 @@ func main() {
 
 	v1 := r.Group(BasePath)
 	{
-		users := v1.Group("/users")
+		authRouter := v1.Group("/auth")
 		{
-			users.GET("/", c.GetUsers)
-			users.GET("/:id", c.GetUserById)
-			users.POST("/", c.CreateUser)
-			users.PUT("/:id", c.UpdateUserById)
-			users.DELETE("/:id", c.DeleteUserById)
+			authRouter.POST("/login", auth.Login)
+		}
+
+		userRouter := v1.Group("/users")
+		{
+			userRouter.GET("/", user.GetRecords)
+			userRouter.GET("/:id", user.GetRecordById)
+			userRouter.POST("/", user.CreateRecord)
+			userRouter.PUT("/:id", user.UpdateRecordById)
+			userRouter.DELETE("/:id", user.DeleteRecordById)
 		}
 	}
 
