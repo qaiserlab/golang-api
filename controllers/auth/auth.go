@@ -4,7 +4,10 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"net/http"
+	"os"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"golang.api/models"
@@ -17,11 +20,12 @@ import (
 // @Accept       	json
 // @Produce      	json
 // @Param        	user body FormLogin true "Form Data"
-// @Success      	200 {object} models.User
+// @Success      	200 {object} LoginResponse
 // @Router       	/v1/auth/login [post]
 func Login(c *gin.Context) {
 	var formData FormLogin
 	var user models.User
+	var loginResponse LoginResponse
 
 	db := c.MustGet("db").(*gorm.DB)
 
@@ -43,9 +47,42 @@ func Login(c *gin.Context) {
 	sha.Write([]byte(salt + formData.Password))
 	password := fmt.Sprintf("%x", sha.Sum(nil))
 
-	if formData.Password != password {
+	if password != user.Password {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid user password."})
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": user})
+	JWT_KEY := []byte(os.Getenv("JWT_KEY"))
+
+	// Session expire on 3 hour
+	expirationTime := time.Now().Add(180 * time.Minute)
+
+	claims := &Claims{
+		Username: formData.Username,
+		StandardClaims: jwt.StandardClaims{
+			// In JWT, the expiry time is expressed as unix milliseconds
+			ExpiresAt: expirationTime.Unix(),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(JWT_KEY)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Finally, we set the client cookie for "token" as the JWT we just generated
+	// we also set an expiry time which is the same as the token itself
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:    "token",
+		Value:   tokenString,
+		Expires: expirationTime,
+	})
+
+	loginResponse.Username = user.Username
+	loginResponse.Token = tokenString
+
+	c.JSON(http.StatusOK, gin.H{"data": loginResponse})
 }
