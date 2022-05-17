@@ -66,23 +66,18 @@ func Login(c *gin.Context) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(JWT_KEY)
+	tokenValue, err := token.SignedString(JWT_KEY)
 
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Finally, we set the client cookie for "token" as the JWT we just generated
-	// we also set an expiry time which is the same as the token itself
-	http.SetCookie(c.Writer, &http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: expirationTime,
-	})
+	domain := os.Getenv("HOST") + ":" + os.Getenv("PORT")
+	c.SetCookie("token", tokenValue, 10, "/", domain, true, true)
 
 	loginResponse.Username = user.Username
-	loginResponse.Token = tokenString
+	loginResponse.Token = tokenValue
 
 	c.JSON(http.StatusOK, gin.H{"data": loginResponse})
 }
