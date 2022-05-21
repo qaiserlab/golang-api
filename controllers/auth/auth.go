@@ -82,7 +82,8 @@ func Login(c *gin.Context) {
 	domain := os.Getenv("HOST") + ":" + os.Getenv("PORT")
 	c.SetCookie("token", tokenValue, 10, "/", domain, true, true)
 
-	loginResponse.Token = tokenValue
+	loginResponse.AccessToken = tokenValue
+	loginResponse.RefreshToken = tokenValue
 
 	c.JSON(http.StatusOK, gin.H{"data": loginResponse})
 }
