@@ -48,7 +48,30 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/auth.AuthResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/auth/refresh": {
+            "get": {
+                "description": "Refresh authorization token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Refresh",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/auth.AuthResponse"
                         }
                     }
                 }
@@ -215,6 +238,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "auth.AuthResponse": {
+            "type": "object",
+            "properties": {
+                "accessToken": {
+                    "type": "string"
+                },
+                "refreshToken": {
+                    "type": "string"
+                }
+            }
+        },
         "auth.LoginForm": {
             "type": "object",
             "required": [
@@ -247,13 +281,16 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
+                "firstName": {
+                    "type": "string"
+                },
                 "gender": {
                     "type": "integer"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "name": {
+                "lastName": {
                     "type": "string"
                 },
                 "password": {
@@ -280,7 +317,7 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "email",
-                "name",
+                "firstName",
                 "password",
                 "username"
             ],
@@ -288,7 +325,10 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
-                "name": {
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
                     "type": "string"
                 },
                 "password": {

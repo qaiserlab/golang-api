@@ -20,12 +20,12 @@ import (
 // @Accept       	json
 // @Produce      	json
 // @Param        	user body LoginForm true "Form Data"
-// @Success      	200 {object} LoginResponse
+// @Success      	200 {object} AuthResponse
 // @Router       	/v1/auth/login [post]
 func Login(c *gin.Context) {
 	var formData LoginForm
 	var user models.User
-	var loginResponse LoginResponse
+	var loginResponse AuthResponse
 
 	JWT_KEY := []byte(os.Getenv("JWT_KEY"))
 	JWT_EXP, err := time.ParseDuration(os.Getenv("JWT_EXP"))
@@ -55,10 +55,10 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Session expire on 3 hour
 	expirationTime := time.Now().Add(JWT_EXP)
 
 	claims := &Claims{
+		ID:          user.ID,
 		FirstName:   user.FirstName,
 		LastName:    user.LastName,
 		Gender:      user.Gender,
@@ -81,10 +81,61 @@ func Login(c *gin.Context) {
 	}
 
 	domain := os.Getenv("HOST") + ":" + os.Getenv("PORT")
-	c.SetCookie("token", tokenValue, 10, "/", domain, true, true)
+	c.SetCookie("token", tokenValue, int(expirationTime.Unix()), "/", domain, true, true)
 
 	loginResponse.AccessToken = tokenValue
 	loginResponse.RefreshToken = tokenValue
 
 	c.JSON(http.StatusOK, gin.H{"data": loginResponse})
+}
+
+// Refresh       	godoc
+// @Summary      	Refresh
+// @Description  	Refresh authorization token
+// @Tags         	auth
+// @Accept       	json
+// @Produce      	json
+// @Success      	200 {object} AuthResponse
+// @Router       	/v1/auth/refresh [get]
+func Refresh(c *gin.Context) {
+	// var user models.User
+	// var loginResponse AuthResponse
+
+	// JWT_KEY := []byte(os.Getenv("JWT_KEY"))
+	// JWT_EXP, err := time.ParseDuration(os.Getenv("JWT_EXP"))
+
+	// expirationTime := time.Now().Add(JWT_EXP)
+
+	// claims := &Claims{
+	// 	FirstName:   user.FirstName,
+	// 	LastName:    user.LastName,
+	// 	Gender:      user.Gender,
+	// 	Email:       user.Email,
+	// 	PhoneNumber: user.PhoneNumber,
+	// 	Username:    user.Username,
+	// 	Role:        user.Role,
+	// 	StandardClaims: jwt.StandardClaims{
+	// 		// In JWT, the expiry time is expressed as unix milliseconds
+	// 		ExpiresAt: expirationTime.Unix(),
+	// 	},
+	// }
+
+	// token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	// tokenValue, err := token.SignedString(JWT_KEY)
+
+	// if err != nil {
+	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+	// 	return
+	// }
+
+	// domain := os.Getenv("HOST") + ":" + os.Getenv("PORT")
+	// c.SetCookie("token", tokenValue, 10, "/", domain, true, true)
+
+	// loginResponse.AccessToken = tokenValue
+	// loginResponse.RefreshToken = tokenValue
+
+	// c.JSON(http.StatusOK, gin.H{"data": loginResponse})
+	userInfo := c.MustGet("userInfo")
+
+	c.JSON(http.StatusOK, gin.H{"data": userInfo})
 }

@@ -10,12 +10,13 @@ type LoginForm struct {
 	Password string `json:"password" binding:"required"`
 }
 
-type LoginResponse struct {
+type AuthResponse struct {
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
 }
 
 type Claims struct {
+	ID          int    `json:"id"`
 	FirstName   string `json:"firstName"`
 	LastName    string `json:"lastName"`
 	Gender      int    `json:"gender"`

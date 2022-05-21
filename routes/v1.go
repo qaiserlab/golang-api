@@ -16,6 +16,7 @@ func LoadV1Router(r *gin.Engine) {
 		authRouter := v1.Group("/auth")
 		{
 			authRouter.POST("/login", auth.Login)
+			authRouter.GET("/refresh", a.AuthMiddleware(), auth.Refresh)
 		}
 
 		userRouter := v1.Group("/users", a.AuthMiddleware())

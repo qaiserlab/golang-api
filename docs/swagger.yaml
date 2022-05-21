@@ -1,4 +1,11 @@
 definitions:
+  auth.AuthResponse:
+    properties:
+      accessToken:
+        type: string
+      refreshToken:
+        type: string
+    type: object
   auth.LoginForm:
     properties:
       password:
@@ -20,11 +27,13 @@ definitions:
     properties:
       email:
         type: string
+      firstName:
+        type: string
       gender:
         type: integer
       id:
         type: integer
-      name:
+      lastName:
         type: string
       password:
         type: string
@@ -43,7 +52,9 @@ definitions:
     properties:
       email:
         type: string
-      name:
+      firstName:
+        type: string
+      lastName:
         type: string
       password:
         type: string
@@ -53,7 +64,7 @@ definitions:
         type: string
     required:
     - email
-    - name
+    - firstName
     - password
     - username
     type: object
@@ -81,8 +92,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.User'
+            $ref: '#/definitions/auth.AuthResponse'
       summary: Login
+      tags:
+      - auth
+  /v1/auth/refresh:
+    get:
+      consumes:
+      - application/json
+      description: Refresh authorization token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/auth.AuthResponse'
+      summary: Refresh
       tags:
       - auth
   /v1/users:
