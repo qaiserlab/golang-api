@@ -1,5 +1,5 @@
 definitions:
-  auth.FormLogin:
+  auth.LoginForm:
     properties:
       password:
         type: string
@@ -39,7 +39,7 @@ definitions:
       username:
         type: string
     type: object
-  user.FormUser:
+  user.UserForm:
     properties:
       email:
         type: string
@@ -74,7 +74,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/auth.FormLogin'
+          $ref: '#/definitions/auth.LoginForm'
       produces:
       - application/json
       responses:
@@ -112,7 +112,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/user.FormUser'
+          $ref: '#/definitions/user.UserForm'
       produces:
       - application/json
       responses:
@@ -179,7 +179,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/user.FormUser'
+          $ref: '#/definitions/user.UserForm'
       produces:
       - application/json
       responses:

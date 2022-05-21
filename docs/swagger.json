@@ -28,7 +28,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth.FormLogin"
+                            "$ref": "#/definitions/auth.LoginForm"
                         }
                     }
                 ],
@@ -86,7 +86,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.FormUser"
+                            "$ref": "#/definitions/user.UserForm"
                         }
                     }
                 ],
@@ -157,7 +157,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.FormUser"
+                            "$ref": "#/definitions/user.UserForm"
                         }
                     }
                 ],
@@ -203,7 +203,7 @@
         }
     },
     "definitions": {
-        "auth.FormLogin": {
+        "auth.LoginForm": {
             "type": "object",
             "required": [
                 "password",
@@ -264,7 +264,7 @@
                 }
             }
         },
-        "user.FormUser": {
+        "user.UserForm": {
             "type": "object",
             "required": [
                 "email",

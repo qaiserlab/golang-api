@@ -19,13 +19,16 @@ import (
 // @Tags         	auth
 // @Accept       	json
 // @Produce      	json
-// @Param        	user body FormLogin true "Form Data"
+// @Param        	user body LoginForm true "Form Data"
 // @Success      	200 {object} LoginResponse
 // @Router       	/v1/auth/login [post]
 func Login(c *gin.Context) {
-	var formData FormLogin
+	var formData LoginForm
 	var user models.User
 	var loginResponse LoginResponse
+
+	JWT_KEY := []byte(os.Getenv("JWT_KEY"))
+	JWT_EXP, err := time.ParseDuration(os.Getenv("JWT_EXP"))
 
 	db := c.MustGet("db").(*gorm.DB)
 
@@ -34,7 +37,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	if err := db.Where("username = ?", formData.Username).First(&user).Error; err != nil {
+	if err := db.Preload("Role").Where("username = ?", formData.Username).First(&user).Error; err != nil {
 		if err := db.Where("email = ?", formData.Username).First(&user).Error; err != nil {
 			c.JSON(http.StatusNotFound, gin.H{"error": "User not found."})
 			return
@@ -52,13 +55,16 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	JWT_KEY := []byte(os.Getenv("JWT_KEY"))
-
 	// Session expire on 3 hour
-	expirationTime := time.Now().Add(180 * time.Minute)
+	expirationTime := time.Now().Add(JWT_EXP)
 
 	claims := &Claims{
-		Username: formData.Username,
+		Name:        user.Name + " test " + os.Getenv("JWT_EXP"),
+		Gender:      user.Gender,
+		Email:       user.Email,
+		PhoneNumber: user.PhoneNumber,
+		Username:    user.Username,
+		Role:        user.Role,
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed as unix milliseconds
 			ExpiresAt: expirationTime.Unix(),
@@ -76,7 +82,6 @@ func Login(c *gin.Context) {
 	domain := os.Getenv("HOST") + ":" + os.Getenv("PORT")
 	c.SetCookie("token", tokenValue, 10, "/", domain, true, true)
 
-	loginResponse.Username = user.Username
 	loginResponse.Token = tokenValue
 
 	c.JSON(http.StatusOK, gin.H{"data": loginResponse})

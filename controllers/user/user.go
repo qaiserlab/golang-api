@@ -56,11 +56,11 @@ func GetRecordById(c *gin.Context) {
 // @Tags         	user
 // @Accept       	json
 // @Produce      	json
-// @Param       	user body FormUser true "Form Data"
+// @Param       	user body UserForm true "Form Data"
 // @Success     	201 {object} models.User
 // @Router      	/v1/users [post]
 func CreateRecord(c *gin.Context) {
-	var formData FormUser
+	var formData UserForm
 	var user models.User
 
 	db := c.MustGet("db").(*gorm.DB)
@@ -107,11 +107,11 @@ func CreateRecord(c *gin.Context) {
 // @Accept					json
 // @Produce					json
 // @Param						id path int true "User ID"
-// @Param						user body FormUser true "Form Data"
+// @Param						user body UserForm true "Form Data"
 // @Success					200 {object} models.User
 // @Router					/v1/users/{id} [put]
 func UpdateRecordById(c *gin.Context) {
-	var formData FormUser
+	var formData UserForm
 	var user models.User
 
 	db := c.MustGet("db").(*gorm.DB)

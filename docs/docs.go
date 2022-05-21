@@ -40,7 +40,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/auth.FormLogin"
+                            "$ref": "#/definitions/auth.LoginForm"
                         }
                     }
                 ],
@@ -98,7 +98,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.FormUser"
+                            "$ref": "#/definitions/user.UserForm"
                         }
                     }
                 ],
@@ -169,7 +169,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/user.FormUser"
+                            "$ref": "#/definitions/user.UserForm"
                         }
                     }
                 ],
@@ -215,7 +215,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "auth.FormLogin": {
+        "auth.LoginForm": {
             "type": "object",
             "required": [
                 "password",
@@ -276,7 +276,7 @@ const docTemplate = `{
                 }
             }
         },
-        "user.FormUser": {
+        "user.UserForm": {
             "type": "object",
             "required": [
                 "email",

@@ -1,18 +1,25 @@
 package auth
 
-import "github.com/dgrijalva/jwt-go"
+import (
+	"github.com/dgrijalva/jwt-go"
+	"golang.api/models"
+)
 
-type FormLogin struct {
+type LoginForm struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
 type LoginResponse struct {
-	Username string `json:"username"`
-	Token    string `json:"token"`
+	Token string `json:"token"`
 }
 
 type Claims struct {
-	Username string `json:"username"`
+	Name        string `json:"name"`
+	Gender      int    `json:"gender"`
+	Email       string `json:"email"`
+	PhoneNumber string `json:"phoneNumber"`
+	Username    string `json:"username"`
+	Role        models.Role
 	jwt.StandardClaims
 }
