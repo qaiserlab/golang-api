@@ -1,7 +1,8 @@
 package user
 
 type UserForm struct {
-	Name        string `json:"name" binding:"required"`
+	FirstName   string `json:"firstName" binding:"required"`
+	LastName    string `json:"lastName"`
 	Email       string `json:"email" binding:"required"`
 	PhoneNumber string `json:"phoneNumber"`
 	Username    string `json:"username" binding:"required"`

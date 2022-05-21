@@ -16,7 +16,8 @@ type LoginResponse struct {
 }
 
 type Claims struct {
-	Name        string `json:"name"`
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
 	Gender      int    `json:"gender"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phoneNumber"`

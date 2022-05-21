@@ -48,7 +48,8 @@ func SetupModels() *gorm.DB {
 			User{Username: "admin"}).
 			Assign(User{
 				RoleID:      1,
-				Name:        "Fadlun Anaturdasa Wibawa",
+				FirstName:   "Fadlun",
+				LastName:    "Anaturdasa",
 				Gender:      0,
 				Email:       "f.anaturdasa@gmail.com",
 				PhoneNumber: "-",

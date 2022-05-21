@@ -4,7 +4,8 @@ type User struct {
 	ID          int `gorm:"primaryKey;autoIncrement"`
 	RoleID      int
 	Role        Role
-	Name        string `json:"name"`
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
 	Gender      int    `json:"gender"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phoneNumber"`

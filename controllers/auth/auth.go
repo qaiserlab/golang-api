@@ -59,7 +59,8 @@ func Login(c *gin.Context) {
 	expirationTime := time.Now().Add(JWT_EXP)
 
 	claims := &Claims{
-		Name:        user.Name + " test " + os.Getenv("JWT_EXP"),
+		FirstName:   user.FirstName,
+		LastName:    user.LastName,
 		Gender:      user.Gender,
 		Email:       user.Email,
 		PhoneNumber: user.PhoneNumber,

@@ -87,7 +87,8 @@ func CreateRecord(c *gin.Context) {
 	password := fmt.Sprintf("%x", sha.Sum(nil))
 
 	newUser := models.User{
-		Name:        formData.Name,
+		FirstName:   formData.FirstName,
+		LastName:    formData.LastName,
 		Email:       formData.Email,
 		PhoneNumber: formData.PhoneNumber,
 		Username:    formData.Username,
