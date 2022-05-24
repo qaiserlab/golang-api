@@ -1,11 +1,11 @@
-package auth
+package types
 
 import (
 	"github.com/dgrijalva/jwt-go"
 	"golang.api/models"
 )
 
-type Claims struct {
+type AuthClaims struct {
 	ID          int `json:"id"`
 	RoleID      int
 	FirstName   string `json:"firstName"`

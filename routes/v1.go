@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.api/controllers/auth"
 	"golang.api/controllers/user"
-	a "golang.api/middlewares/auth"
+	m "golang.api/middlewares"
 )
 
 const basePath = "/v1"
@@ -16,10 +16,10 @@ func LoadV1Router(r *gin.Engine) {
 		authRouter := v1.Group("/auth")
 		{
 			authRouter.POST("/login", auth.Login)
-			authRouter.GET("/refresh", a.AuthMiddleware(), auth.Refresh)
+			authRouter.GET("/refresh", m.Auth(), auth.Refresh)
 		}
 
-		userRouter := v1.Group("/users", a.AuthMiddleware())
+		userRouter := v1.Group("/users", m.Auth())
 		{
 			userRouter.GET("/", user.GetRecords)
 			userRouter.GET("/:id", user.GetRecordById)

@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"golang.api/models"
+	"golang.api/types"
 )
 
 // Login         	godoc
@@ -57,7 +58,7 @@ func Login(c *gin.Context) {
 
 	expirationTime := time.Now().Add(JWT_EXP)
 
-	claims := &Claims{
+	claims := &types.AuthClaims{
 		ID:          user.ID,
 		FirstName:   user.FirstName,
 		LastName:    user.LastName,
@@ -98,7 +99,7 @@ func Login(c *gin.Context) {
 // @Success      	200 {object} AuthResponse
 // @Router       	/v1/auth/refresh [get]
 func Refresh(c *gin.Context) {
-	// userInfo := c.MustGet("userInfo").(Claims)
-	userInfo := c.MustGet("userInfo")
-	c.JSON(http.StatusOK, gin.H{"data": userInfo})
+	userInfo := c.MustGet("userInfo").(*types.AuthClaims)
+
+	c.JSON(http.StatusOK, gin.H{"data": userInfo.Username})
 }

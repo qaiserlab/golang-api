@@ -1,4 +1,4 @@
-package auth
+package middlewares
 
 import (
 	"net/http"
@@ -6,9 +6,10 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"golang.api/types"
 )
 
-func AuthMiddleware() gin.HandlerFunc {
+func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token, err := c.Cookie("token")
 		errorResponse := gin.H{"error": "Access denied."}
@@ -19,7 +20,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		JWT_KEY := []byte(os.Getenv("JWT_KEY"))
-		claims := &Claims{}
+		claims := &types.AuthClaims{}
 
 		jwtToken, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
 			return JWT_KEY, nil

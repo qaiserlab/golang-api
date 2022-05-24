@@ -1,10 +1,5 @@
 package auth
 
-import (
-	"github.com/dgrijalva/jwt-go"
-	"golang.api/models"
-)
-
 type LoginForm struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
@@ -13,16 +8,4 @@ type LoginForm struct {
 type AuthResponse struct {
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
-}
-
-type Claims struct {
-	ID          int    `json:"id"`
-	FirstName   string `json:"firstName"`
-	LastName    string `json:"lastName"`
-	Gender      int    `json:"gender"`
-	Email       string `json:"email"`
-	PhoneNumber string `json:"phoneNumber"`
-	Username    string `json:"username"`
-	Role        models.Role
-	jwt.StandardClaims
 }
