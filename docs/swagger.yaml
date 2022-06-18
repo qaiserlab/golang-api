@@ -96,11 +96,17 @@ paths:
       summary: Login
       tags:
       - auth
-  /v1/auth/refresh:
+  /v1/auth/refresh/{token}:
     get:
       consumes:
       - application/json
       description: Refresh authorization token
+      parameters:
+      - description: Refresh Token
+        in: path
+        name: token
+        required: true
+        type: string
       produces:
       - application/json
       responses:

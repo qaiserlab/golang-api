@@ -109,10 +109,21 @@ func Login(c *gin.Context) {
 // @Tags         	auth
 // @Accept       	json
 // @Produce      	json
+// @Param       	token path string true "Refresh Token"
 // @Success      	200 {object} AuthResponse
-// @Router       	/v1/auth/refresh [get]
+// @Router       	/v1/auth/refresh/{token} [get]
 func Refresh(c *gin.Context) {
-	userInfo := c.MustGet("userInfo").(*types.AuthClaims)
+	refreshToken := c.Param("token")
+	JWT_KEY := []byte(os.Getenv("JWT_KEY"))
 
-	c.JSON(http.StatusOK, gin.H{"data": userInfo.Username})
+	jwtToken, err := jwt.Parse(refreshToken, func(token *jwt.Token) (interface{}, error) {
+		return JWT_KEY, nil
+	})
+
+	if err != nil || !jwtToken.Valid {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Access denied."})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": "Success."})
 }

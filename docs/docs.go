@@ -54,7 +54,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/auth/refresh": {
+        "/v1/auth/refresh/{token}": {
             "get": {
                 "description": "Refresh authorization token",
                 "consumes": [
@@ -67,6 +67,15 @@ const docTemplate = `{
                     "auth"
                 ],
                 "summary": "Refresh",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Refresh Token",
+                        "name": "token",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
