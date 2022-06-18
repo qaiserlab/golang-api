@@ -1,8 +1,6 @@
 package auth
 
 import (
-	"crypto/sha1"
-	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -10,6 +8,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"golang.api/helpers"
 	"golang.api/models"
 	"golang.api/types"
 )
@@ -45,11 +44,7 @@ func Login(c *gin.Context) {
 		}
 	}
 
-	salt := user.Salt
-
-	sha := sha1.New()
-	sha.Write([]byte(salt + formData.Password))
-	password := fmt.Sprintf("%x", sha.Sum(nil))
+	password := helpers.GenHash(formData.Password, user.Salt)
 
 	if password != user.Password {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid user password."})

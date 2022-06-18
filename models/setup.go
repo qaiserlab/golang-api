@@ -1,13 +1,11 @@
 package models
 
 import (
-	"crypto/sha1"
-	"fmt"
 	"os"
-	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"golang.api/helpers"
 )
 
 func SetupModels() *gorm.DB {
@@ -38,11 +36,8 @@ func SetupModels() *gorm.DB {
 			}).
 			FirstOrCreate(&Role{})
 
-		salt := fmt.Sprintf("%d", time.Now().UnixNano())
-
-		sha := sha1.New()
-		sha.Write([]byte(salt + "admin"))
-		password := fmt.Sprintf("%x", sha.Sum(nil))
+		salt := helpers.GenSalt()
+		password := helpers.GenHash("admin", salt)
 
 		db.Where(
 			User{Username: "admin"}).

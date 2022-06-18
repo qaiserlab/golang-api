@@ -1,13 +1,11 @@
 package user
 
 import (
-	"crypto/sha1"
-	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"golang.api/helpers"
 	"golang.api/models"
 )
 
@@ -80,11 +78,8 @@ func CreateRecord(c *gin.Context) {
 		return
 	}
 
-	salt := fmt.Sprintf("%d", time.Now().UnixNano())
-
-	sha := sha1.New()
-	sha.Write([]byte(salt + formData.Password))
-	password := fmt.Sprintf("%x", sha.Sum(nil))
+	salt := helpers.GenSalt()
+	password := helpers.GenHash(formData.Password, salt)
 
 	newUser := models.User{
 		FirstName:   formData.FirstName,
