@@ -3,6 +3,7 @@ package auth
 import (
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -94,8 +95,10 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	domain := os.Getenv("HOST") + ":" + os.Getenv("PORT")
-	c.SetCookie("token", accessTokenValue, int(expirationTime.Unix()), "/", domain, true, true)
+	SERVER_URL := os.Getenv("SERVER_URL")
+	SERVER_HOST := strings.Split(SERVER_URL, "://")[1]
+
+	c.SetCookie("token", accessTokenValue, int(expirationTime.Unix()), "/", SERVER_HOST, true, true)
 
 	authResponse.AccessToken = accessTokenValue
 	authResponse.RefreshToken = refreshTokenValue

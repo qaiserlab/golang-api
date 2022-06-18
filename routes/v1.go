@@ -21,9 +21,9 @@ func LoadV1Router(r *gin.Engine) {
 
 		userRouter := v1.Group("/users", m.Auth())
 		{
-			userRouter.GET("/", user.GetRecords)
+			userRouter.GET("", user.GetRecords)
 			userRouter.GET("/:id", user.GetRecordById)
-			userRouter.POST("/", user.CreateRecord)
+			userRouter.POST("", user.CreateRecord)
 			userRouter.PUT("/:id", user.UpdateRecordById)
 			userRouter.DELETE("/:id", user.DeleteRecordById)
 		}

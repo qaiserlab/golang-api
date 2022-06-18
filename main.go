@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -29,8 +30,20 @@ func LoadEnvy() {
 func main() {
 	LoadEnvy()
 
+	APP_NAME := os.Getenv("APP_NAME")
+	APP_DESCRIPTION := os.Getenv("APP_DESCRIPTION")
+	APP_VERSION := os.Getenv("APP_VERSION")
+	SERVER_URL := os.Getenv("SERVER_URL")
+	SERVER_HOST := strings.Split(SERVER_URL, "://")[1]
+	CLIENT_URL := os.Getenv("CLIENT_URL")
+
 	r := gin.Default()
-	r.Use(cors.Default())
+
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{CLIENT_URL}
+	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE"}
+
+	r.Use(cors.New(config))
 
 	db := models.SetupModels()
 	r.Use(func(c *gin.Context) {
@@ -40,27 +53,25 @@ func main() {
 
 	routes.LoadV1Router(r)
 
-	basePath := os.Getenv("HOST") + ":" + os.Getenv("PORT")
-	baseUrl := "http://" + basePath
-
-	fmt.Println(baseUrl)
-
-	docs.SwaggerInfo.Title = os.Getenv("APP_NAME")
-	docs.SwaggerInfo.Description = os.Getenv("APP_DESCRIPTION")
-	docs.SwaggerInfo.Version = os.Getenv("APP_VERSION")
-	docs.SwaggerInfo.Host = basePath
+	docs.SwaggerInfo.Title = APP_NAME
+	docs.SwaggerInfo.Description = APP_DESCRIPTION
+	docs.SwaggerInfo.Version = APP_VERSION
+	docs.SwaggerInfo.Host = SERVER_HOST
 	docs.SwaggerInfo.BasePath = "/"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
-			"APP_NAME":    os.Getenv("APP_NAME"),
-			"APP_VERSION": os.Getenv("APP_VERSION"),
-			"APP_SWAG":    baseUrl + "/swagger/index.html",
+			"APP_NAME":    APP_NAME,
+			"APP_VERSION": APP_VERSION,
+			"APP_SWAG":    SERVER_URL + "/swagger/index.html",
 		})
 	})
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	r.Run("localhost:" + os.Getenv("PORT"))
+	fmt.Println("Server run on:")
+	fmt.Println(SERVER_URL)
+
+	r.Run(SERVER_HOST)
 }
