@@ -68,8 +68,26 @@ func Login(c *gin.Context) {
 		},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenValue, err := token.SignedString(JWT_KEY)
+	// Generate & Save Access Token
+
+	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	accessTokenValue, err := accessToken.SignedString(JWT_KEY)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Generate & Save Refresh Token
+
+	refreshToken := jwt.New(jwt.SigningMethodHS256)
+	refreshTokenClaims := refreshToken.Claims.(jwt.MapClaims)
+	// Not sure about this sub & exp
+	refreshTokenClaims["sub"] = 1
+	// refreshTokenClaims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+	refreshTokenClaims["exp"] = expirationTime.Add(time.Hour * 24).Unix()
+
+	refreshTokenValue, err := refreshToken.SignedString(JWT_KEY)
 
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
@@ -77,10 +95,10 @@ func Login(c *gin.Context) {
 	}
 
 	domain := os.Getenv("HOST") + ":" + os.Getenv("PORT")
-	c.SetCookie("token", tokenValue, int(expirationTime.Unix()), "/", domain, true, true)
+	c.SetCookie("token", accessTokenValue, int(expirationTime.Unix()), "/", domain, true, true)
 
-	authResponse.AccessToken = tokenValue
-	authResponse.RefreshToken = tokenValue
+	authResponse.AccessToken = accessTokenValue
+	authResponse.RefreshToken = refreshTokenValue
 
 	c.JSON(http.StatusOK, gin.H{"data": authResponse})
 }
